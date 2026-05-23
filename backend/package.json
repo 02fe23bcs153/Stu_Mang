@@ -1,0 +1,29 @@
+{
+  "name": "student-management-backend",
+  "version": "1.0.0",
+  "description": "DevOps Student Management System REST API backend",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "init-db": "node src/init-db.js"
+  },
+  "keywords": [
+    "express",
+    "sqlite",
+    "postgres",
+    "devops"
+  ],
+  "author": "Antigravity",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "pg": "^8.11.5",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

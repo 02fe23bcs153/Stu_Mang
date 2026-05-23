@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  # 1. PostgreSQL Database Service
+  db:
+    image: postgres:16-alpine
+    container_name: stu-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: student_db
+      TZ: Asia/Kolkata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d student_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - student_network
+
+  # 2. Node.js Express API Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: stu-backend
+    restart: always
+    environment:
+      PORT: 5000
+      DB_TYPE: postgres
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgrespassword
+      DB_NAME: student_db
+      TZ: Asia/Kolkata
+    expose:
+      - "5000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - student_network
+
+  # 3. Nginx + React Frontend Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: stu-frontend
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - student_network
+
+# Persistent volume storage for Postgres database
+volumes:
+  postgres_data:
+
+# Isolated bridge network for internal microservices communication
+networks:
+  student_network:
+    driver: bridge
