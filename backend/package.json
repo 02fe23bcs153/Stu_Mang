@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
+    "test": "node -e \"const db=require('./src/db');const api=require('./src/routes/api');console.log('✅ Backend module validation passed. DB_TYPE:',db.DB_TYPE);process.exit(0);\"",
     "init-db": "node src/init-db.js"
   },
   "keywords": [
